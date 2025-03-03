@@ -1,1 +1,37 @@
-.
+U
+    ˜'Âgá  ã                   @   s   d Z dd„ ZdS )z;
+This module contains a function to multiply two matrices.
+c                    s,  t | tƒstdƒ‚t ˆ tƒs$tdƒ‚tdd„ | D ƒƒs>tdƒ‚tdd„ ˆ D ƒƒsXtd ƒ‚| rdt| ƒsltdƒ‚ˆ rxtˆ ƒs€td	ƒ‚td
+d„ | D ƒƒsštd
+ƒ‚tdd„ ˆ D ƒƒs´td
+ƒ‚tt dd„ | D ƒƒƒdkrÖtdƒ‚tt dd„ ˆ D ƒƒƒdkrøtdƒ‚t| d ƒtˆ ƒkrtdƒ‚‡ fdd„| D ƒ}|S )ad  
+    Multiplies two matrices.
+
+    Args:
+        m_a (list of lists): First matrix.
+        m_b (list of lists): Second matrix.
+
+    Returns:
+        list of lists: The result of multiplying m_a by m_b.
+
+    Raises:
+        TypeError: If m_a or m_b are not lists of lists of numbers.
+        ValueError: If m_a or m_b are empty or can't be multiplied.
+    zm_a must be a listzm_b must be a listc                 s   s   | ]}t |tƒV  qd S ©N©Ú
+isinstanceÚlist©Ú.0Úrow© r   úi/home/desquimor/holbertonschool-higher_level_programming/python-test_driven_development/100-matrix_mul.pyÚ	<genexpr>   s     zmatrix_mul.<locals>.<genexpr>zm_a must be a list of listsc                 s   s   | ]}t |tƒV  qd S r   r   r   r   r   r	   r
+      s     zm_b must be a list of listszm_a can't be emptyzm_b can't be emptyc                 s   s&   | ]}|D ]}t |ttfƒV  q
+qd S r   ©r   ÚintÚfloat©r   r    Znumr   r   r	   r
+   !   s       z*m_a should contain only integers or floatsc                 s   s&   | ]}|D ]}t |ttfƒV  q
+qd S r   r
+   r   r   r   r	   r
+   #   s       z*m_b should contain only integers or floatsc                 s   s   | ]}t |ƒV  qd S r   ©Úlenr   r   r   r	   r
+   %   s     é   z(each row of m_a must be of the same sizec                 s   s   | ]}t |ƒV  qd S r   r   r   r   r   r	   r
+   '   s     z(each row of m_b must be of the same sizeé    zm_a and m_b can't be multipliedc                    s"   g | ]‰ ‡ fd d„t ˆŽ D ƒ‘qS )c                     s$   g | ]}t d d„ tˆ |ƒD ƒƒ‘qS )c                 s   s   | ]\}}|| V  qd S r   r   )r   ÚaÚbr   r   r	   r
+   ,   s     z3matrix_mul.<locals>.<listcomp>.<listcomp>.<genexpr>)ÚsumÚzip)r   Zcol_b©Zrow_ar   r	   Ú
+<listcomp>,   s   ÿz)matrix_mul.<locals>.<listcomp>.<listcomp>)r   )r   ©Úm_br   r	   r   ,   s   ÿ
+ÿzmatrix_mul.<locals>.<listcomp>)r   r   Ú	TypeErrorÚallÚanyÚ
+ValueErrorr   Úset)Zm_ar   Úresultr   r   r	   Ú
+matrix_mul   s4    
+
+
+ÿr!   N)Ú __doc__r!   r   r   r   r	   Ú<module>   s   
