@@ -1,58 +1,79 @@
 #!/usr/bin/python3
-"""Reads from standard input and computes metrics.
+"""Module that calculates metrics from HTTP access log entries.
 
-After every ten lines or the input of a keyboard interruption (CTRL + C),
-prints the following statistics:
-    - Total file size up to that point.
-    - Count of read status codes up to that point.
+This script reads stdin line by line and computes metrics:
+- Input format: "<IP Address> - [<date>]"
+- Prints statistics every 10 lines and after a keyboard interruption (CTRL + C)
+- Shows total file size and number of lines by status code in ascending order
 """
 
+import sys
 
-def print_stats(size, status_codes):
-    """Print accumulated metrics.
+
+def print_stats(total_size, status_codes):
+    """Print accumulated statistics.
 
     Args:
-        size (int): The accumulated read file size.
-        status_codes (dict): The accumulated count of status codes.
+        total_size (int): The total file size
+        status_codes (dict): Dictionary with status codes and their counts
     """
-    print("File size: {}".format(size))
-    for key in sorted(status_codes):
-        print("{}: {}".format(key, status_codes[key]))
+    print(f"File size: {total_size}")
+    for code in sorted(status_codes.keys()):
+        if status_codes[code] > 0:
+            print(f"{code}: {status_codes[code]}")
+
 
 if __name__ == "__main__":
-    import sys
-
-    size = 0
-    status_codes = {}
-    valid_codes = ['200', '301', '400', '401', '403', '404', '405', '500']
-    count = 0
+    total_size = 0
+    status_codes = {'200': 0, '301': 0, '400': 0, '401': 0,
+                    '403': 0, '404': 0, '405': 0, '500': 0}
+    line_count = 0
 
     try:
         for line in sys.stdin:
-            if count == 10:
-                print_stats(size, status_codes)
-                count = 1
-            else:
-                count += 1
+            line_count += 1
 
-            line = line.split()
+            # Use simple string splitting instead of regex
+            parts = line.split('"')
+            if len(parts) >= 2:
+                try:
+                    # Get status code and file size from the part
+                    info = parts[1].split()
+                    if len(info) >= 2 and \
+                            "GET /projects/260 HTTP/1.1" in parts[1]:
+                        try:
+                            # The last two elements should be status
+                            http_info = parts[2].strip().split()
+                            if len(http_info) >= 2:
+                                status_code = http_info[0]
+                                file_size = int(http_info[1])
 
-            try:
-                size += int(line[-1])
-            except (IndexError, ValueError):
-                pass
+                                # Update metrics
+                                total_size += file_size
+                                if status_code in status_codes:
+                                    status_codes[status_code] += 1
+                        except (IndexError, ValueError):
+                            # Try alternative parsing if the above fails
+                            try:
+                                line_parts = line.split()
+                                if len(line_parts) >= 9:
+                                    status_code = line_parts[-2]
+                                    file_size = int(line_parts[-1])
 
-            try:
-                if line[-2] in valid_codes:
-                    if status_codes.get(line[-2], -1) == -1:
-                        status_codes[line[-2]] = 1
-                    else:
-                        status_codes[line[-2]] += 1
-            except IndexError:
-                pass
+                                    # Update metrics
+                                    total_size += file_size
+                                    if status_code in status_codes:
+                                        status_codes[status_code] += 1
+                            except (IndexError, ValueError):
+                                pass
+                except (IndexError, ValueError):
+                    pass
 
-        print_stats(size, status_codes)
+            # Print stats every 10 lines
+            if line_count % 10 == 0:
+                print_stats(total_size, status_codes)
 
     except KeyboardInterrupt:
-        print_stats(size, status_codes)
-        raise
+        pass
+    finally:
+        print_stats(total_size, status_codes)
