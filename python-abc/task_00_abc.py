@@ -1,36 +1,25 @@
 #!/usr/bin/python3
+"""Module containing Animal class and its inheritances"""
 from abc import ABC, abstractmethod
 
-class Animal(ABC):
-    """Abstract base class representing an Animal."""
 
+class Animal(ABC):
+    """The Animal class"""
     @abstractmethod
     def sound(self):
-        """Abstract method to be implemented by subclasses.
-
-        Returns:
-            str: The sound made by the animal.
-        """
+        """Method to make sound"""
         pass
 
+
 class Dog(Animal):
-    """Class representing a Dog, subclass of Animal."""
-
+    """Dog class Inherited from Animal"""
     def sound(self):
-        """Returns the sound made by the dog.
-
-        Returns:
-            str: The sound 'Bark'.
-        """
+        """Dog goes Bark"""
         return "Bark"
 
+
 class Cat(Animal):
-    """Class representing a Cat, subclass of Animal."""
-
+    """Cat class Inherited from Animal"""
     def sound(self):
-        """Returns the sound made by the cat.
-
-        Returns:
-            str: The sound 'Meow'.
-        """
+        """Cat goes Meow"""
         return "Meow"
